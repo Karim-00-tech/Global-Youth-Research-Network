@@ -1,113 +1,40 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Global Youth Research Network — GYRN</title>
-  <meta name="description" content="Global Youth Research Network — Main Chapter: Sharkya STEM Research Club. Connecting and empowering young researchers worldwide." />
+  <meta name="description"
+    content="Global Youth Research Network — Main Chapter: Sharkya STEM Research Club. Connecting and empowering young researchers worldwide." />
   <meta name="robots" content="index,follow">
 
   <!-- Tailwind (fast prototype) -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link class="floating-icon float-slow" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link class="floating-icon float-slow"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-  /* حركة الطفو */
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
-}
-
-.floating-icon {
-  animation: float 3s ease-in-out infinite;
-}
-
-.float-slow {
-  animation-duration: 5s; /* تبطئة الحركة */
-}
-</style>
-
-
   <!-- Three.js CDN + extras for postprocessing -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/examples/js/controls/OrbitControls.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/examples/js/postprocessing/EffectComposer.js"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/examples/js/postprocessing/EffectComposer.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/examples/js/postprocessing/RenderPass.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/examples/js/postprocessing/UnrealBloomPass.js"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/examples/js/postprocessing/UnrealBloomPass.js"></script>
 
-  <style>
-    :root{
-      --gold:#f5b034;
-      --accent:#60a5fa;
-      --muted:#6b7280;
-      --bg-ink: #020214;
-    }
-    html,body{height:100%;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;margin:0;direction:ltr}
-    .smooth-scroll{scroll-behavior:smooth}
-    body{
-      background:
-        radial-gradient(800px 400px at 12% 10%, rgba(14,165,233,0.03), transparent),
-        linear-gradient(180deg,#020214 0%, #031027 100%);
-      color:#e6eef8;
-      -webkit-font-smoothing:antialiased;
-    }
+  <!-- Three.js r128 + GLTFLoader -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/loaders/GLTFLoader.js"></script>
 
-    /* HERO / CANVAS */
-    .card-glass{
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.015));
-      backdrop-filter: blur(6px);
-    }
-    .hero-overlay{background: linear-gradient(180deg, rgba(3,6,20,0.2), rgba(3,6,20,0.55));}
+  <!-- EmailJS -->
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
-    /* floating */
-    @keyframes floatUpDown {0%{transform:translateY(0) rotate(0);}50%{transform:translateY(-14px) rotate(4deg);}100%{transform:translateY(0) rotate(0);}}
-    .float-slow{animation:floatUpDown 7.2s ease-in-out infinite}
-    .float-med{animation:floatUpDown 5.2s ease-in-out infinite}
-    .float-fast{animation:floatUpDown 4.2s ease-in-out infinite}
-
-    /* buttons */
-    .btn-3d{position:relative;overflow:hidden;transform-style:preserve-3d;transition:transform .18s ease}
-    .btn-3d:active{transform:translateY(1px) scale(.995)}
-    .btn-shine::before{
-      content:'';position:absolute;top:-140%;left:-40%;width:70%;height:280%;
-      background:linear-gradient(120deg,transparent,rgba(255,255,255,0.6),transparent);
-      transform:skewX(-22deg);transition:all .6s;pointer-events:none;mix-blend-mode:overlay;
-    }
-    .btn-shine:hover::before{left:140%}
-
-    /* card hover */
-    .project-card{transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s;transform-style:preserve-3d}
-    .project-card:hover{transform:translateY(-10px) rotateX(3deg) scale(1.03);box-shadow:0 38px 80px rgba(2,6,23,0.7)}
-
-    /* text effects */
-    .glow-title{color:var(--gold);text-shadow:0 10px 40px rgba(245,176,52,0.12),0 2px 8px rgba(14,165,233,0.05)}
-    .neon{color:#dff4ff;text-shadow:0 0 12px rgba(96,165,250,0.12),0 6px 40px rgba(14,165,233,0.06)}
-
-    /* gallery */
-    .research-img{height:160px;object-fit:cover;width:100%;display:block;border-radius:.75rem}
-
-    /* intro cinematic */
-    .intro-wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:80;background:radial-gradient(circle at 30% 30%, rgba(5,9,25,0.95), rgba(2,6,23,0.99));backdrop-filter:blur(3px)}
-    .intro-text{font-size:clamp(20px,3vw,46px);font-weight:800;color:var(--gold);letter-spacing:0.6px;text-align:center}
-    .intro-sub{color:#cbd5e1;margin-top:10px;font-weight:500}
-
-    /* parallax helper */
-    .parallax{position:relative;transform-style:preserve-3d}
-
-    /* sticky subtle header */
-    header{backdrop-filter: blur(6px);background:linear-gradient(180deg, rgba(2,6,23,0.35), rgba(2,6,23,0.15));border-bottom:1px solid rgba(255,255,255,0.03)}
-
-    /* accessibility focus */
-    a:focus, button:focus, input:focus {outline: 3px solid rgba(96,165,250,0.18);outline-offset:3px}
-
-    /* responsive tweaks */
-    @media (max-width:880px){
-      .research-img{height:120px}
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
+
 <body class="smooth-scroll">
 
   <!-- cinematic intro -->
@@ -121,73 +48,66 @@
   <div class="min-h-screen flex flex-col">
 
 
-    
+
     <!-- NAV -->
     <header class="w-full z-50">
       <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         <a href="#" class="flex items-center gap-4" aria-label="GYRN - home">
-<div class="relative inline-block p-[2px] rounded-md animate-spin-slow bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 animate-spin-gradient">
+          <div
+            class="relative inline-block p-[2px] rounded-md animate-spin-slow bg-gradient-to-r from-blue-800 via-blue-700 to-blue-900 animate-spin-gradient">
 
-  <img src="photo.jpg" alt="GYRN logo" class="h-12 w-12 rounded-md object-cover shadow-lg"/>
-</div>
+            <img src="1logo.jpg" alt="GYRN logo" class="h-12 w-12 rounded-md object-cover shadow-lg" />
+          </div>
 
-<style>
-@keyframes spin-gradient {
-  0% {
-    transform: rotate(0deg);
-    background-position: 0% 50%;
-  }
-  50% {
-    transform: rotate(180deg);
-    background-position: 100% 50%;
-  }
-  100% {
-    transform: rotate(360deg);
-    background-position: 0% 50%;
-  }
-}
-
-.animate-spin-gradient {
-  background-size: 200% 200%;
-  animation: spin-gradient 6s linear infinite;
-}
-</style>
           <div>
-            <h1 class="text-lg font-semibold" >Global Youth Research Network</h1>
+            <h1 class="text-lg font-semibold text-white">Global Youth Research Network</h1>
             <p class="text-xs text-slate-300">Main Chapter — Sharkya STEM Research Club</p>
           </div>
         </a>
 
-        <nav class="hidden lg:flex items-center gap-8 text-sm text-slate-300" role="navigation" aria-label="Main">
-          <a href="#about" class="hover:text-white text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 drop-shadow-lg animate-pulse hover:scale-110 transition-transform duration-500">About</a>
-          <a href="#research" class="hover:text-white text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 drop-shadow-lg animate-pulse hover:scale-110 transition-transform duration-500" >Research Fields</a>
-          <a href="#projects" class="hover:text-white text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 drop-shadow-lg animate-pulse hover:scale-110 transition-transform duration-500">Our Journal</a>
-          <a href="#events" class="hover:text-white text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 drop-shadow-lg animate-pulse hover:scale-110 transition-transform duration-500" >References</a>
-          <button type="button" onclick="openGoogleForm()" class="px-6 py-3 rounded-md text-white font-semibold btn-3d btn-shine bg-gradient-to-r from-sky-400 to-crimson-500 hover:from-sky-300 hover:to-crimson-400 transition-all duration-300">Apply</button>
-        </nav>
+<nav class="hidden lg:flex items-center gap-8 text-sm text-slate-300" role="navigation" aria-label="Main">
+  <a href="#about"
+    class="text-white hover:text-blue-500 active:text-blue-700 text-3xl font-extrabold drop-shadow-lg animate-pulse hover:scale-110 transition-transform duration-500">About</a>
+  
+  <a href="#research"
+    class="text-white hover:text-blue-500 active:text-blue-700 text-3xl font-extrabold drop-shadow-lg animate-pulse hover:scale-110 transition-transform duration-500">Research Fields</a>
+  
+  <a href="#projects"
+    class="text-white hover:text-blue-500 active:text-blue-700 text-3xl font-extrabold drop-shadow-lg animate-pulse hover:scale-110 transition-transform duration-500">Our Journal</a>
+  
+  <a href="#events"
+    class="text-white hover:text-blue-500 active:text-blue-700 text-3xl font-extrabold drop-shadow-lg animate-pulse hover:scale-110 transition-transform duration-500">References</a>
+  
+  <button type="button" onclick="openGoogleForm()"
+    class="px-6 py-3 rounded-md text-white font-semibold btn-3d btn-shine bg-gradient-to-r from-blue-700 to-blue-900 hover:from-blue-600 hover:to-blue-800 transition-all duration-300">Apply</button>
+</nav>
 
         <div class="lg:hidden">
-          <button id="mobileBtn" class="p-2 rounded-md bg-white/5" aria-expanded="false" aria-controls="mobileMenu" aria-label="فتح القائمة">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-100" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10M4 18h16"/></svg>
+          <button id="mobileBtn" class="p-2 rounded-md bg-white/10" aria-expanded="false" aria-controls="mobileMenu"
+            aria-label="فتح القائمة">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-200" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10M4 18h16" />
+            </svg>
           </button>
         </div>
       </div>
 
-      <div id="mobileMenu" class="hidden lg:hidden bg-[#030313] border-t border-white/5">
+      <div id="mobileMenu" class="hidden lg:hidden bg-[#003f6c] border-t border-white/20">
         <div class="max-w-7xl mx-auto px-6 py-4 flex flex-col gap-2">
-          <a href="#about" class="py-2 border-b border-white/2">About</a>
-          <a href="#projects" class="py-2 border-b border-white/2">Projects</a>
-          <a href="#research" class="py-2 border-b border-white/2">Research</a>
-          <a href="#events" class="py-2 border-b border-white/2">Events</a>
-          <a href="#team" class="py-2 border-b border-white/2">Team</a>
-          <a href="#join" class="py-2 bg-[var(--gold)] text-black rounded-md text-center">Join</a>
+          <a href="#about" class="py-2 border-b border-blue-100/40">About</a>
+          <a href="#projects" class="py-2 border-b border-blue-100/40">Projects</a>
+          <a href="#research" class="py-2 border-b border-blue-100/40">Research</a>
+          <a href="#events" class="py-2 border-b border-blue-100/40">Events</a>
+          <a href="#team" class="py-2 border-b border-blue-100/40">Team</a>
+          <a href="#join" class="py-2 bg-[#003f6c] text-[#003f6c] rounded-md text-center">Join</a>
         </div>
       </div>
 
     </header>
 
 
-    
+
     <!-- HERO -->
     <main class="flex-1">
       <section class="relative overflow-hidden">
@@ -200,108 +120,69 @@
             <!-- left -->
             <div class="space-y-6 z-30 parallax">
               <div class="inline-flex items-center gap-3" data-depth="0.12">
-<div class="relative inline-block p-[2px] rounded-md animate-spin-slow bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 animate-gradient floating-icon float-fast">
-<style>
-@keyframes spin-gradient {
-  0% {
-    transform: rotate(0deg);
-    background-position: 0% 50%;
-  }
-  50% {
-    transform: rotate(180deg);
-    background-position: 100% 50%;
-  }
-  100% {
-    transform: rotate(360deg);
-    background-position: 0% 50%;
-  }
-}
-
-.animate-spin-gradient {
-  background-size: 200% 200%;
-  animation: spin-gradient 6s linear infinite;
-}
-</style>
-
-  <img src="photo.jpg" alt="logo" class="h-9 w-9 object-cover rounded-sm floating-icon float-slow"/>
+                <div
+                  class="relative inline-block p-[2px] rounded-md animate-spin-slow bg-gradient-to-r from-blue-800 via-blue-700 to-blue-900 animate-gradient floating-icon float-fast">
+                  <img src="4logo.jpg" alt="logo" class="h-9 w-9 object-cover rounded-sm floating-icon float-slow" />
                 </div>
                 <span class="text-sm tracking-wide text-slate-300">Sharkya STEM — Main Chapter</span>
               </div>
 
 
-<h1 class="gradient-text glow-text text-4xl font-extrabold hover:scale-110 transition-transform duration-500">
-  Where Real Research Begins
-</h1>
+              <h1
+class="relative inline-block
+       bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-white
+       hover:from-blue-400 hover:via-blue-600 hover:to-blue-800
+       text-4xl font-extrabold hover:scale-110 transition-transform duration-500
+       
+       before:content-[''] before:absolute before:-inset-2 before:z-[-1]
+       before:bg-blue-500 before:opacity-30 before:blur-xl before:rounded-full
+       before:animate-pulse hover:before:opacity-50">
+                Where Real Research Begins
+              </h1>
 
-<style>
-/* نص ثابت بألوان gradient */
-.gradient-text {
-  background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
-  -webkit-background-clip-: text;
-  -webkit-text-fill-color-: transparent;
-  position: relative;
-  display: inline-block;
-  overflow: hidden;
-}
-
-/* تأثير اللمعة المتحركة */
-.gradient-text::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -75%;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(
-    120deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.8) 50%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  animation: shine 3s infinite;
-}
-
-/* اللمعة تتحرك يمين */
-@keyframes shine {
-  0% { left: -75%; }
-  100% { left: 125%; }
-}
-
-/* Glow حوالي الكلام */
-.glow-text {
-  text-shadow:
-    0 0 10px rgba(236, 72, 153, 0.7),
-    0 0 20px rgba(139, 92, 246, 0.5),
-    0 0 30px rgba(99, 102, 241, 0.4);
-}
-</style>
-
-
-              <p class="text-slate-300 max-w-xl" data-depth="0.04">At GYRN, we teach <strong>Research methods</strong>, <strong>Content in your favourite field</strong>, <strong>rigor</strong>, and <strong>publication</strong> across Neuroscience, Computer Science, Chemistry, Engineering, Biology, and more. Experience hands-on mentorship and TAs that mirror university research. Also, you will get a chance to publish your <strong>Paper</strong> in Our Journal </p>
+              <p class="text-slate-300 max-w-xl" data-depth="0.04">At GYRN, we teach <strong>Research methods</strong>,
+                <strong>Content in your favourite field</strong>, <strong>rigor</strong>, and
+                <strong>publication</strong> across Neuroscience, Computer Science, Chemistry, Engineering, Biology, and
+                more. Experience hands-on mentorship and TAs that mirror university research. Also, you will get a
+                chance to publish your <strong>Paper</strong> in Our Journal
+              </p>
 
               <div class="flex flex-wrap gap-4 items-center">
-                <a href="#join" class="px-6 py-3 rounded-md text-white font-semibold btn-3d btn-shine bg-gradient-to-r from-sky-400 to-crimson-500 hover:from-sky-300 hover:to-crimson-400 transition-all duration-300" data-depth="0.02">Ask a Question</a>
-                <a href="#research" class="inline-flex items-center gap-2 px-5 py-3 rounded-md border border-white/10 text-slate-200">Explore Our Fields</a>
-                <a href="#Follow" class="text-white text-base font-family bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 drop-shadow-lg animate-pulse">Follow US →</a>
+                <a href="#join"
+                  class="px-6 py-3 rounded-md text-white font-semibold btn-3d btn-shine bg-gradient-to-r from-blue-700 to-blue-900 hover:from-blue-600 hover:to-blue-800 transition-all duration-300"
+                  data-depth="0.02">Ask a Question</a>
+                <a href="#research"
+                  class="inline-flex items-center gap-2 px-5 py-3 rounded-md border border-white/20 text-slate-300">Explore
+                  Our Fields</a>
+                <a href="#Follow"
+                  class="text-base font-semibold text-white drop-shadow-lg animate-pulse hover:text-[#1a6bb5] transition-colors duration-300">Follow
+                  US →</a>
               </div>
 
               <div class="mt-6 flex gap-6 text-sm text-slate-400">
                 <div data-depth="0.01">
-                  <div class="hover:text-white text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 drop-shadow-lg animate-pulse hover:scale-110 transition-transform duration-500">Founder</div>
+                  <div
+                    class="hover:text-white text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-800 via-blue-700 to-blue-900 drop-shadow-lg animate-pulse hover:scale-110 transition-transform duration-500">
+                    Founder</div>
                   <div class="text-base">Sharkya STEM</div>
                 </div>
                 <div data-depth="0.015">
-                  <div class="hover:text-white text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 drop-shadow-lg animate-pulse hover:scale-110 transition-transform duration-500">15+</div>
+                  <div
+                    class="hover:text-white text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-800 via-blue-700 to-blue-900 drop-shadow-lg animate-pulse hover:scale-110 transition-transform duration-500">
+                    15+</div>
                   <div class="text-base">Fields</div>
                 </div>
                 <div data-depth="0.02">
-                  <div class="hover:text-white text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 drop-shadow-lg animate-pulse hover:scale-110 transition-transform duration-500">Global</div>
+                  <div
+                    class="hover:text-white text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-800 via-blue-700 to-blue-900 drop-shadow-lg animate-pulse hover:scale-110 transition-transform duration-500">
+                    Global</div>
                   <div class="text-base">Network</div>
                 </div>
               </div>
             </div>
 
-    
+
+ 
 <!-- سكشن 3D -->
 <div class="relative z-20">
   <div class="card-glass rounded-2xl p-6 shadow-2xl border border-white/6" data-depth="-0.02">
@@ -312,6 +193,7 @@
     </div>
   </div>
 </div>
+
 
 <!-- 🟢 مكتبات Three.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -394,759 +276,461 @@
   })();
 </script>
 </div></div></div>
-</section>
 
-      <!-- ABOUT -->
-      <section id="about" class="max-w-7xl mx-auto px-6 py-16">
-        <div class="grid lg:grid-cols-2 gap-10 items-center">
-          <div>
-            <h3 class="gradient-text glow-text text-4xl font-extrabold hover:scale-110 transition-transform duration-500">Who we are?!</h3>
-<style>
-/* نص ثابت بألوان gradient */
-.gradient-text {
-  background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
-  -webkit-background-clip-: text;
-  -webkit-text-fill-color-: transparent;
-  position: relative;
-  display: inline-block;
-  overflow: hidden;
-}
+  <!-- ABOUT -->
+  <section id="about" class="max-w-7xl mx-auto px-6 py-16">
+    <div class="grid lg:grid-cols-2 gap-10 items-center">
+      <div>
+        <h3 class="relative inline-block
+       bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-white
+       hover:from-blue-400 hover:via-blue-600 hover:to-blue-800
+       text-4xl font-extrabold hover:scale-110 transition-transform duration-500
+       
+       before:content-[''] before:absolute before:-inset-2 before:z-[-1]
+       before:bg-blue-500 before:opacity-30 before:blur-xl before:rounded-full
+       before:animate-pulse hover:before:opacity-50">
+          Who we are?!</h3>
+        <p class="mt-4 text-slate-300">The Global Youth Research Network (GYRN) is a Global network initiated by the
+          Sharkya STEM Research School Club and developed into a global network welcoming students worldwide. Our
+          mission is to make research accessible to all students, support them in learning research skills, and provide
+          high-quality educational content in selected scientific fields. We provide Research programs, Workshops,
+          mentorship, and develop you in your favourite Research field. Additionally, we organize competitions in
+          research methodology and in our respective fields, and provide an opportunity to publish your papers in our
+          Journal. This network is open to everyone, and any student can join our official Discord server via our
+          website to follow the timeline of our programs & workshops.</p>
+        <p class="mt-4 text-slate-300">The workshops and some sessions will be available to all students, and we will
+          announce their timeline via Discord and our pages on social media. Regarding our programs, for your own good
+          and to make all students benefit, we made a form consisting of some questions to choose a certain number of
+          students. You can access the form via the Apply button on our website. All the questions are critical, and
+          there aren’t specific right answers.</p>
 
-/* تأثير اللمعة المتحركة */
-.gradient-text::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -75%;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(
-    120deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.8) 50%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  animation: shine 3s infinite;
-}
+      </div>
 
-/* اللمعة تتحرك يمين */
-@keyframes shine {
-  0% { left: -75%; }
-  100% { left: 125%; }
-}
+      <div class="p-6 rounded-2xl bg-gradient-to-br from-white/10 to-white/10 card-glass">
+        <h4
+          class="relative inline-block
+       bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-white
+       hover:from-blue-400 hover:via-blue-600 hover:to-blue-800
+       text-4xl font-extrabold hover:scale-110 transition-transform duration-500
+       
+       before:content-[''] before:absolute before:-inset-2 before:z-[-1]
+       before:bg-blue-500 before:opacity-30 before:blur-xl before:rounded-full
+       before:animate-pulse hover:before:opacity-50">
+          Why join GYRN?</h4>
+        <ol class="mt-4 text-slate-300 list-decimal list-inside text-slate-300 space-y-2 text-sm">
+          <li>Access to Professors, Mentors and TAs.</li>
+          <li>Collaborate with peers across countries.</li>
+          <li>Get an opportunity to publish your paper in our Journal.</li>
+          <li>Get opportunities to join prestigious programs & workshops.</li>
+          <li>Participate in Global competitions in Research & your favourite field.</li>
+        </ol>
 
-/* Glow حوالي الكلام */
-.glow-text {
-  text-shadow:
-    0 0 10px rgba(236, 72, 153, 0.7),
-    0 0 20px rgba(139, 92, 246, 0.5),
-    0 0 30px rgba(99, 102, 241, 0.4);
-}
-</style>
+        <div class="mt-6 flex gap-4">
+          <button type="button" onclick="openGoogleForm()"
+            class="px-6 py-3 rounded-md text-white font-semibold btn-3d btn-shine bg-gradient-to-r from-blue-700 to-blue-900 hover:from-blue-600 hover:to-blue-800 transition-all duration-300">Apply
+            now</button>
+          <a href="#research" class="px-4 py-2 rounded-md border border-white/20">See fields</a>
+        </div>
 
-
-            <p class="mt-4 text-white text-slate-300">The Global Youth Research Network (GYRN) is a Global network initiated by the Sharkya STEM Research School Club and developed into a global network welcoming students worldwide. Our mission is to make research accessible to all students, support them in learning research skills, and provide high-quality educational content in selected scientific fields. We provide Research programs, Workshops, mentorship, and develop you in your favourite Research field. Additionally, we organize competitions in research methodology and in our respective fields, and provide an opportunity to publish your papers in our Journal. This network is open to everyone, and any student can join our official Discord server via our website to follow the timeline of our programs & workshops.</p>
-            <p class="mt-4 text-white text-slate-300">The workshops and some sessions will be available to all students, and we will announce their timeline via Discord and our pages on social media. Regarding our programs, for your own good and to make all students benefit, we made a form consisting of some questions to choose a certain number of students. You can access the form via the Apply button on our website. All the questions are critical, and there aren’t specific right answers.</p>
-            
-          </div>
-
-          <div class="p-6 rounded-2xl bg-gradient-to-br from-white/3 to-white/6 card-glass">
-            <h4 class="hover:text-white text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 drop-shadow-lg animate-pulse hover:scale-110 transition-transform duration-500">Why join GYRN?</h4>
-            <ol class="mt-4 text-white list-decimal list-inside text-slate-300 space-y-2 text-sm">
-              <li>Access to Professors, Mentors and TAs.</li>
-              <li>Collaborate with peers across countries.</li>
-              <li>Get an opportunity to publish your paper in our Journal.</li>
-              <li>Get opportunities to join prestigious programs & workshops.</li>
-              <li>Participate in Global competitions in Research & your favourite field.</li>
-            </ol>
-
-            <div class="mt-6 flex gap-4">
-              <button type="button" onclick="openGoogleForm()" class="px-6 py-3 rounded-md text-white font-semibold btn-3d btn-shine bg-gradient-to-r from-sky-400 to-crimson-500 hover:from-sky-300 hover:to-crimson-400 transition-all duration-300">Apply now</button>
-              <a href="#research" class="px-4 py-2 rounded-md border border-white/8">See fields</a>
-            </div>
-
-            <div class="mt-6 grid sm:grid-cols-2 gap-4">
-              <div class="p-4 bg-white/3 rounded-lg project-card" data-tilt>
-                <h4 class="hover:text-white text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 drop-shadow-lg animate-pulse hover:scale-110 transition-transform duration-500">Programs</h4>
-            <ol class="mt-4 text-white list-decimal list-inside text-slate-300 space-y-2 text-sm">
+        <div class="mt-6 grid sm:grid-cols-2 gap-4">
+          <div class="p-4 bg-white/10 rounded-lg project-card" data-tilt>
+            <h4
+              class="hover:text-white text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-800 via-blue-700 to-blue-900 drop-shadow-lg animate-pulse hover:scale-110 transition-transform duration-500">
+              Programs</h4>
+            <ol class="mt-4 text-slate-300 list-decimal list-inside text-slate-300 space-y-2 text-sm">
               <li>Specific periods (8 weeks)</li>
               <li>mentorship</li>
               <li>Certificates</li>
               <li>Graduated by Grade</li>
               <li>Make a Research paper</li>
               <li>Develop yourself in your favourite field</li>
-            </ol>             
-           </div>
-              <div class="p-4 bg-white/3 rounded-lg project-card" data-tilt>
-                <h4 class="hover:text-white text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 drop-shadow-lg animate-pulse hover:scale-110 transition-transform duration-500">Workshops & Sessions</h4>
-            <ol class="mt-4 text-white list-decimal list-inside text-slate-300 space-y-2 text-sm">
+            </ol>
+          </div>
+          <div class="p-4 bg-white/10 rounded-lg project-card" data-tilt>
+            <h4
+              class="hover:text-white text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-800 via-blue-700 to-blue-900 drop-shadow-lg animate-pulse hover:scale-110 transition-transform duration-500">
+              Workshops & Sessions</h4>
+            <ol class="mt-4 text-slate-300 list-decimal list-inside text-slate-300 space-y-2 text-sm">
               <li>Several times</li>
               <li>Attend without Application</li>
               <li>Develop yourself in your favourite field</li>
               <li>Develop yourself in Research field</li>
               <li>Get knowledge about other fields</li>
             </ol>
-            </div>
-            </div>
           </div>
-<style>
-  /* لمعة متحركة على الحواف */
-  .card-glass::before {
-    content: "";
-    position: absolute;
-    inset: -50%;
-    background: conic-gradient(
-      from 0deg,
-      rgba(6, 62, 78, 0.4),
-      transparent,
-      rgba(6, 62, 78, 0.4),
-      transparent
-    );
-    animation: rotateBorder 6s linear infinite;
-    z-index: 0;
-  }
+        </div>
+      </div>
+    </div>
+  </section>
 
-  /* طبقة شفافة فوق اللمعة عشان ما تغطي المحتوى */
-  .card-glass::after {
-    content: "";
-    position: absolute;
-    inset: 2px;
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: inherit;
-    z-index: 1;
-  }
 
-  /* حركة اللمعة */
-  @keyframes rotateBorder {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
+  <!-- RESEARCH CONTENT / GALLERY -->
+  <section id="research" class="max-w-7xl mx-auto px-6 py-16">
+    <h3
+      class="text-white [text-shadow:0_0_15px_#3b82f6] animate-pulse text-4xl font-extrabold text-center mb-12 hover:scale-110 transition-transform duration-500">
+      Our Research Fields
+    </h3>
 
-  /* تأثير الجريان اللوني */
-  .card-glass {
-    position: relative;
-    z-index: 0;
-    border: 2px solid transparent;
-    background: linear-gradient(#000, #000) padding-box,
-                linear-gradient(270deg, #070550, #2f0975,#070550 ) border-box;
-    background-size: 200% 200%;
-    animation: borderMove 10s linear infinite;
-    border-radius: 8px;
-  }
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 text-center">
 
-  @keyframes borderMove {
-    0% {
-      background-position: 0% 50%, 0% 50%;
-    }
-    100% {
-      background-position: 200% 50%, 200% 50%;
-    }
-  }
-  
-  /* المحتوى يظل فوق */
-  .card-glass > * {
-    position: relative;
-    z-index: 2;
-  }
-</style>
-          
+      <div class="space-y-6">
+
+        <div
+          class="p-6 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 shadow-lg hover:bg-white/10 hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center flex flex-col items-center justify-center">
+          <span class="floating-icon float-slow inline-block">
+            <i class="fas fa-dna text-4xl text-pink-400 mb-3 
+            transition-transform duration-700 
+            group-hover:rotate-180 group-hover:scale-125 group-hover:text-pink-300 
+            group-hover:drop-shadow-[0_0_15px_#ec4899] 
+            animate-pulse"></i>
+          </span>
+          <h2 class="text-2xl font-bold text-blue-50 drop-shadow-md 
+          transition-all duration-500 group-hover:scale-110 group-hover:text-white group-hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] mt-2">
+            Biology
+          </h2>
+        </div>
+
+        <div
+          class="p-6 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 shadow-lg hover:bg-white/10 hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center flex flex-col items-center justify-center">
+          <span class="floating-icon float-slow inline-block">
+            <i class="fas fa-vials text-4xl text-purple-400 mb-3 
+            transition-transform duration-700 
+            group-hover:rotate-180 group-hover:scale-125 group-hover:text-purple-300 
+            group-hover:drop-shadow-[0_0_15px_#a855f7] 
+            animate-pulse"></i>
+          </span>
+          <h2 class="text-2xl font-bold text-blue-50 drop-shadow-md 
+          transition-all duration-500 group-hover:scale-110 group-hover:text-white group-hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] mt-2">
+            Chemistry
+          </h2>
+        </div>
+
+        <div
+          class="p-6 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 shadow-lg hover:bg-white/10 hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center flex flex-col items-center justify-center">
+          <span class="floating-icon float-slow inline-block">
+            <i class="fas fa-user-md text-4xl text-indigo-400 mb-3 
+            transition-transform duration-700 
+            group-hover:rotate-180 group-hover:scale-125 group-hover:text-indigo-300 
+            group-hover:drop-shadow-[0_0_15px_#6366f1] 
+            animate-pulse"></i>
+          </span>
+          <h2 class="text-2xl font-bold text-blue-50 drop-shadow-md 
+          transition-all duration-500 group-hover:scale-110 group-hover:text-white group-hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] mt-2">
+            Medicine & Public Health
+          </h2>
+        </div>
+
+        <div
+          class="p-6 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 shadow-lg hover:bg-white/10 hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center flex flex-col items-center justify-center">
+          <span class="floating-icon float-slow inline-block">
+            <i class="fas fa-brain text-4xl text-pink-400 mb-3 
+            transition-transform duration-700 
+            group-hover:rotate-180 group-hover:scale-125 group-hover:text-pink-300 
+            group-hover:drop-shadow-[0_0_15px_#ec4899] 
+            animate-pulse"></i>
+          </span>
+          <h2 class="text-2xl font-bold text-blue-50 drop-shadow-md 
+          transition-all duration-500 group-hover:scale-110 group-hover:text-white group-hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] mt-2">
+            Neuroscience
+          </h2>
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        <div
+          class="p-6 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 shadow-lg hover:bg-white/10 hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center flex flex-col items-center justify-center">
+          <span class="floating-icon float-slow inline-block">
+            <i class="fas fa-laptop-code text-4xl text-indigo-500 mb-3 
+            transition-transform duration-700 
+            group-hover:rotate-180 group-hover:scale-125 group-hover:text-indigo-300 
+            group-hover:drop-shadow-[0_0_15px_#3b82f6] 
+            animate-pulse"></i>
+          </span>
+          <h2 class="text-2xl font-bold text-blue-50 drop-shadow-md 
+          transition-all duration-500 group-hover:scale-110 group-hover:text-white group-hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] mt-2">
+            Computer Science
+          </h2>
+        </div>
+
+        <div
+          class="p-6 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 shadow-lg hover:bg-white/10 hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center flex flex-col items-center justify-center">
+          <span class="floating-icon float-slow inline-block">
+            <i class="fas fa-database text-4xl text-purple-500 mb-3 
+            transition-transform duration-700 
+            group-hover:rotate-180 group-hover:scale-125 group-hover:text-purple-300 
+            group-hover:drop-shadow-[0_0_15px_#a855f7] 
+            animate-pulse"></i>
+          </span>
+          <h2 class="text-2xl font-bold text-blue-50 drop-shadow-md 
+          transition-all duration-500 group-hover:scale-110 group-hover:text-white group-hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] mt-2">
+            Data Science
+          </h2>
+        </div>
+
+        <div
+          class="p-6 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 shadow-lg hover:bg-white/10 hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center flex flex-col items-center justify-center">
+          <span class="floating-icon float-slow inline-block">
+            <i class="fas fa-space-shuttle text-4xl text-pink-500 mb-3 
+            transition-transform duration-700 
+            group-hover:rotate-180 group-hover:scale-125 group-hover:text-pink-300 
+            group-hover:drop-shadow-[0_0_15px_#ec4899] 
+            animate-pulse"></i>
+          </span>
+          <h2 class="text-2xl font-bold text-blue-50 drop-shadow-md 
+          transition-all duration-500 group-hover:scale-110 group-hover:text-white group-hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] mt-2">
+            Aerospace
+          </h2>
+        </div>
+
+        <div
+          class="p-6 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 shadow-lg hover:bg-white/10 hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center flex flex-col items-center justify-center">
+          <span class="floating-icon float-slow inline-block">
+            <i class="fas fa-cogs text-4xl text-indigo-400 mb-3 
+            transition-transform duration-700 
+            group-hover:rotate-180 group-hover:scale-125 group-hover:text-indigo-300 
+            group-hover:drop-shadow-[0_0_15px_#6366f1] 
+            animate-pulse"></i>
+          </span>
+          <h2 class="text-2xl font-bold text-blue-50 drop-shadow-md 
+          transition-all duration-500 group-hover:scale-110 group-hover:text-white group-hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] mt-2">
+            Engineering
+          </h2>
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        <div
+          class="p-6 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 shadow-lg hover:bg-white/10 hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center flex flex-col items-center justify-center">
+          <span class="floating-icon float-slow inline-block">
+            <i class="fas fa-leaf text-4xl text-green-400 mb-3 
+            transition-transform duration-700 
+            group-hover:rotate-180 group-hover:scale-125 group-hover:text-green-300 
+            group-hover:drop-shadow-[0_0_15px_#22c55e] 
+            animate-pulse"></i>
+          </span>
+          <h2 class="text-2xl font-bold text-blue-50 drop-shadow-md 
+          transition-all duration-500 group-hover:scale-110 group-hover:text-white group-hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] mt-2">
+            Environment
+          </h2>
+        </div>
+
+        <div
+          class="p-6 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 shadow-lg hover:bg-white/10 hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center flex flex-col items-center justify-center">
+          <span class="floating-icon float-slow inline-block">
+            <i class="fas fa-square-root-alt text-4xl text-yellow-400 mb-3 
+            transition-transform duration-700 
+            group-hover:rotate-180 group-hover:scale-125 group-hover:text-yellow-300 
+            group-hover:drop-shadow-[0_0_15px_#eab308] 
+            animate-pulse"></i>
+          </span>
+          <h2 class="text-2xl font-bold text-blue-50 drop-shadow-md 
+          transition-all duration-500 group-hover:scale-110 group-hover:text-white group-hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] mt-2">
+            Mathematics
+          </h2>
+        </div>
+
+        <div
+          class="p-6 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 shadow-lg hover:bg-white/10 hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center flex flex-col items-center justify-center">
+          <span class="floating-icon float-slow inline-block">
+            <i class="fas fa-atom text-4xl text-purple-400 mb-3 
+            transition-transform duration-700 
+            group-hover:rotate-180 group-hover:scale-125 group-hover:text-purple-300 
+            group-hover:drop-shadow-[0_0_15px_#a855f7] 
+            animate-pulse"></i>
+          </span>
+          <h2 class="text-2xl font-bold text-blue-50 drop-shadow-md 
+          transition-all duration-500 group-hover:scale-110 group-hover:text-white group-hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] mt-2">
+            Physics
+          </h2>
+        </div>
+
+        <div
+          class="p-6 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 shadow-lg hover:bg-white/10 hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center flex flex-col items-center justify-center">
+          <span class="floating-icon float-slow inline-block">
+            <i class="fas fa-robot text-4xl text-indigo-500 mb-3 
+            transition-transform duration-700 
+            group-hover:rotate-180 group-hover:scale-125 group-hover:text-indigo-300 
+            group-hover:drop-shadow-[0_0_15px_#3b82f6] 
+            animate-pulse"></i>
+          </span>
+          <h2 class="text-2xl font-bold text-blue-50 drop-shadow-md 
+          transition-all duration-500 group-hover:scale-110 group-hover:text-white group-hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] mt-2">
+            Robotics
+          </h2>
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        <div
+          class="p-6 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 shadow-lg hover:bg-white/10 hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center flex flex-col items-center justify-center">
+          <span class="floating-icon float-slow inline-block">
+            <i class="fas fa-chart-line text-4xl text-green-500 mb-3 
+            transition-transform duration-700 
+            group-hover:rotate-180 group-hover:scale-125 group-hover:text-green-300 
+            group-hover:drop-shadow-[0_0_15px_#22c55e] 
+            animate-pulse"></i>
+          </span>
+          <h2 class="text-2xl font-bold text-blue-50 drop-shadow-md 
+          transition-all duration-500 group-hover:scale-110 group-hover:text-white group-hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] mt-2">
+            Economics
+          </h2>
+        </div>
+
+        <div
+          class="p-6 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 shadow-lg hover:bg-white/10 hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center flex flex-col items-center justify-center">
+          <span class="floating-icon float-slow inline-block">
+            <i class="fas fa-lightbulb text-4xl text-yellow-500 mb-3 
+            transition-transform duration-700 
+            group-hover:rotate-180 group-hover:scale-125 group-hover:text-yellow-300 
+            group-hover:drop-shadow-[0_0_15px_#eab308] 
+            animate-pulse"></i>
+          </span>
+          <h2 class="text-2xl font-bold text-blue-50 drop-shadow-md 
+          transition-all duration-500 group-hover:scale-110 group-hover:text-white group-hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] mt-2">
+            Philosophy
+          </h2>
+        </div>
+
+        <div
+          class="p-6 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 shadow-lg hover:bg-white/10 hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center flex flex-col items-center justify-center">
+          <span class="floating-icon float-slow inline-block">
+            <i class="fas fa-user-friends text-4xl text-pink-500 mb-3 
+            transition-transform duration-700 
+            group-hover:rotate-180 group-hover:scale-125 group-hover:text-pink-300 
+            group-hover:drop-shadow-[0_0_15px_#ec4899] 
+            animate-pulse"></i>
+          </span>
+          <h2 class="text-2xl font-bold text-blue-50 drop-shadow-md 
+          transition-all duration-500 group-hover:scale-110 group-hover:text-white group-hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] mt-2">
+            Psychology
+          </h2>
+        </div>
+
+        <div
+          class="p-6 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 shadow-lg hover:bg-white/10 hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center flex flex-col items-center justify-center">
+          <span class="floating-icon float-slow inline-block">
+            <i class="fas fa-briefcase text-4xl text-indigo-500 mb-3 
+            transition-transform duration-700 
+            group-hover:rotate-180 group-hover:scale-125 group-hover:text-indigo-300 
+            group-hover:drop-shadow-[0_0_15px_#3b82f6] 
+            animate-pulse"></i>
+          </span>
+          <h2 class="text-2xl font-bold text-blue-50 drop-shadow-md 
+          transition-all duration-500 group-hover:scale-110 group-hover:text-white group-hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] mt-2">
+            Business
+          </h2>
+        </div>
+      </div>
+
+
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section id="team" class="max-w-7xl mx-auto px-6 py-16">
+    <!-- العنوان -->
+    <h3
+      class="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-800 via-blue-700 to-blue-900 drop-shadow-lg animate-pulse hover:scale-110 transition-transform duration-500">
+      Team
+    </h3>
+
+    <!-- الوصف -->
+    <p class="mt-3 text-lg text-slate-300 italic tracking-wide hover:text-white transition-colors duration-300">
+      Founder — Sharkya STEM Research Club & GYRN.
+    </p>
+  </section>
+
+
+<div class="mt-12 flex justify-center">
+    <div
+      class="relative p-8 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 shadow-lg hover:bg-white/10 hover:shadow-[0_0_30px_rgba(59,130,246,0.15)] hover:-translate-y-2 transition-all duration-500 group overflow-hidden max-w-md w-full text-center">
+
+      <div class="absolute -top-10 -left-10 w-40 h-40 bg-blue-500/20 rounded-full blur-3xl pointer-events-none z-0 transition-opacity duration-500 group-hover:opacity-70"></div>
+      <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl pointer-events-none z-0 transition-opacity duration-500 group-hover:opacity-70"></div>
+
+<div
+        class="relative mx-auto h-56 w-56 rounded-full overflow-hidden border-4 border-white/20 shadow-[0_0_20px_rgba(0,0,0,0.3)] transition-all duration-500 group-hover:border-blue-400/50 group-hover:shadow-[0_0_20px_rgba(59,130,246,0.4)] z-10">
+        <img src="Karim.jpeg" alt="Karim" class="object-cover w-full h-full" />
+      </div>
+
+      <h4 class="mt-6 text-2xl font-bold text-white drop-shadow-md z-10 relative transition-transform duration-500 group-hover:scale-105">
+        Karim Mohamed Nady
+      </h4>
+
+      <div class="mt-5 flex flex-col gap-3 z-10 relative">
+        <p class="text-sm md:text-base text-blue-100 font-medium tracking-wide flex items-center justify-center gap-2 group-hover:text-white transition-colors">
+          <i class="fas fa-globe text-blue-400"></i> Global Youth Research Network Founder
+        </p>
+        <p class="text-sm md:text-base text-blue-100 font-medium tracking-wide flex items-center justify-center gap-2 group-hover:text-white transition-colors">
+          <i class="fas fa-flask text-purple-400"></i> Sharkya STEM Research Club Founder
+        </p>
+        <p class="text-sm md:text-base text-blue-100 font-medium tracking-wide flex items-center justify-center gap-2 group-hover:text-white transition-colors">
+          <i class="fas fa-laptop-code text-indigo-400"></i> Website Founder
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Particles أنعم -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+
+  </div>
+  </div>
+
+  <!-- JOIN -->
+  <section id="join" class="max-w-3xl mx-auto px-6 py-16">
+    <div class="p-8 rounded-2xl card-glass border border-white/20">
+      <h3
+        class="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-800 via-blue-700 to-blue-900 drop-shadow-lg animate-pulse hover:scale-110 transition-transform duration-500">
+        Support
+      </h3>
+
+      <p class="text-slate-300 mt-2 drop-shadow-sm hover:text-white transition-colors duration-300">
+        Tell us about your question. We'll contact you soon
+      </p>
+
+
+
+
+      <form id="joinForm" class="mt-6 grid grid-cols-1 gap-4">
+        <textarea name="interests" input name="fullname" required placeholder="Full name"
+          class="w-full p-3 bg-transparent animated-border text-slate-200"></textarea>
+        <textarea name="interests" input name="email" type="email" required placeholder="Email address"
+          class="w-full p-3 bg-transparent animated-border text-slate-200"></textarea>
+        <textarea name="interests" input name="country" placeholder="Country"
+          class="w-full p-3 bg-transparent animated-border text-slate-200"></textarea>
+
+        <select name="interests" class="w-full p-3 bg-transparent animated-border text-slate-200">
+          <option value="student" class="text-slate-200">I'm a student</option>
+          <option value="mentor" class="text-slate-200">I'm faculty / mentor</option>
+          <option value="volunteer" class="text-slate-200">I'm an organizer / volunteer</option>
+        </select>
+
+        <textarea name="interests" placeholder="What is your question?"
+          class="w-full p-3 bg-transparent animated-border text-slate-200"></textarea>
+
+        <div class="flex gap-4">
+          <button type="submit" class="px-6 py-3 rounded-md text-white font-semibold btn-3d btn-shine 
+  bg-gradient-to-r from-blue-700 to-blue-900 hover:from-blue-600 hover:to-blue-800 transition-all duration-300">
+            Submit
+          </button>
+
+          <button type="button" onclick="openGoogleForm()" class="join-btn">Join Network</button>
 
         </div>
-      </section>
 
-
-
-<!-- RESEARCH CONTENT / GALLERY -->
-<section id="research" class="max-w-7xl mx-auto px-6 py-16">
-  <h3 class="gradient-text glow-text text-4xl font-extrabold text-center mb-12 hover:scale-110 transition-transform duration-500">
-    Our Research Fields
-  </h3>
-
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 text-center">
-
-    <!-- العمود 1 -->
-    <div class="space-y-6">
-
-      <!-- Biology -->
-      <div class="p-6 rounded-xl bg-white/5 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center">
-        <span class="floating-icon float-slow inline-block">
-          <i class="fas fa-dna text-4xl text-pink-400 mb-3 
-            transition-transform duration-700 
-            group-hover:rotate-180 group-hover:scale-125 group-hover:text-pink-300 
-            group-hover:drop-shadow-[0_0_15px_#ec4899] 
-            animate-pulse"></i>
-        </span>
-        <h2 class="text-3xl font-extrabold bg-clip-text text-transparent 
-          bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 drop-shadow-lg 
-          transition-all duration-500 group-hover:scale-110 group-hover:text-white">
-          Biology
-        </h2>
-      </div>
-
-      <!-- Chemistry -->
-      <div class="p-6 rounded-xl bg-white/5 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center">
-        <span class="floating-icon float-slow inline-block">
-          <i class="fas fa-vials text-4xl text-purple-400 mb-3 
-            transition-transform duration-700 
-            group-hover:rotate-180 group-hover:scale-125 group-hover:text-purple-300 
-            group-hover:drop-shadow-[0_0_15px_#a855f7] 
-            animate-pulse"></i>
-        </span>
-        <h2 class="text-3xl font-extrabold bg-clip-text text-transparent 
-          bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 drop-shadow-lg 
-          transition-all duration-500 group-hover:scale-110 group-hover:text-white">
-          Chemistry
-        </h2>
-      </div>
-
-      <!-- Medicine -->
-      <div class="p-6 rounded-xl bg-white/5 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center">
-        <span class="floating-icon float-slow inline-block">
-          <i class="fas fa-user-md text-4xl text-indigo-400 mb-3 
-            transition-transform duration-700 
-            group-hover:rotate-180 group-hover:scale-125 group-hover:text-indigo-300 
-            group-hover:drop-shadow-[0_0_15px_#6366f1] 
-            animate-pulse"></i>
-        </span>
-        <h2 class="text-3xl font-extrabold bg-clip-text text-transparent 
-          bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 drop-shadow-lg 
-          transition-all duration-500 group-hover:scale-110 group-hover:text-white">
-          Medicine & Public Health
-        </h2>
-      </div>
-
-      <!-- Neuroscience -->
-      <div class="p-6 rounded-xl bg-white/5 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center">
-        <span class="floating-icon float-slow inline-block">
-          <i class="fas fa-brain text-4xl text-pink-400 mb-3 
-            transition-transform duration-700 
-            group-hover:rotate-180 group-hover:scale-125 group-hover:text-pink-300 
-            group-hover:drop-shadow-[0_0_15px_#ec4899] 
-            animate-pulse"></i>
-        </span>
-        <h2 class="text-3xl font-extrabold bg-clip-text text-transparent 
-          bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 drop-shadow-lg 
-          transition-all duration-500 group-hover:scale-110 group-hover:text-white">
-          Neuroscience & Neurobiology
-        </h2>
-      </div>
+        <p id="formMsg" class="text-sm text-emerald-400 mt-2 hidden">Thank you — we received your question.</p>
+      </form>
     </div>
-
-    <!-- العمود 2 -->
-    <div class="space-y-6">
-      <!-- Computer Science -->
-      <div class="p-6 rounded-xl bg-white/5 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center">
-        <span class="floating-icon float-slow inline-block">
-          <i class="fas fa-laptop-code text-4xl text-indigo-500 mb-3 
-            transition-transform duration-700 
-            group-hover:rotate-180 group-hover:scale-125 group-hover:text-indigo-300 
-            group-hover:drop-shadow-[0_0_15px_#3b82f6] 
-            animate-pulse"></i>
-        </span>
-        <h2 class="text-3xl font-extrabold bg-clip-text text-transparent 
-          bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 drop-shadow-lg 
-          transition-all duration-500 group-hover:scale-110 group-hover:text-white">
-          Computer Science
-        </h2>
-      </div>
-
-      <!-- Data Science -->
-      <div class="p-6 rounded-xl bg-white/5 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center">
-        <span class="floating-icon float-slow inline-block">
-          <i class="fas fa-database text-4xl text-purple-500 mb-3 
-            transition-transform duration-700 
-            group-hover:rotate-180 group-hover:scale-125 group-hover:text-purple-300 
-            group-hover:drop-shadow-[0_0_15px_#a855f7] 
-            animate-pulse"></i>
-        </span>
-        <h2 class="text-3xl font-extrabold bg-clip-text text-transparent 
-          bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 drop-shadow-lg 
-          transition-all duration-500 group-hover:scale-110 group-hover:text-white">
-          Data Science
-        </h2>
-      </div>
-      
-      <!-- Aerospace Engineering -->
-      <div class="p-6 rounded-xl bg-white/5 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center">
-        <span class="floating-icon float-slow inline-block">
-          <i class="fas fa-space-shuttle text-4xl text-pink-500 mb-3 
-            transition-transform duration-700 
-            group-hover:rotate-180 group-hover:scale-125 group-hover:text-pink-300 
-            group-hover:drop-shadow-[0_0_15px_#ec4899] 
-            animate-pulse"></i>
-        </span>
-        <h2 class="text-3xl font-extrabold bg-clip-text text-transparent 
-          bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 drop-shadow-lg 
-          transition-all duration-500 group-hover:scale-110 group-hover:text-white">
-          Aerospace Engineering
-        </h2>
-      </div>
-
-      <!-- Engineering -->
-      <div class="p-6 rounded-xl bg-white/5 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center">
-        <span class="floating-icon float-slow inline-block">
-          <i class="fas fa-cogs text-4xl text-indigo-400 mb-3 
-            transition-transform duration-700 
-            group-hover:rotate-180 group-hover:scale-125 group-hover:text-indigo-300 
-            group-hover:drop-shadow-[0_0_15px_#6366f1] 
-            animate-pulse"></i>
-        </span>
-        <h2 class="text-3xl font-extrabold bg-clip-text text-transparent 
-          bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 drop-shadow-lg 
-          transition-all duration-500 group-hover:scale-110 group-hover:text-white">
-          Engineering
-        </h2>
-      </div>
-    </div>
-
-    <!-- العمود 3 -->
-    <div class="space-y-6">
-      <!-- Environmental Science -->
-      <div class="p-6 rounded-xl bg-white/5 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center">
-        <span class="floating-icon float-slow inline-block">
-          <i class="fas fa-leaf text-4xl text-green-400 mb-3 
-            transition-transform duration-700 
-            group-hover:rotate-180 group-hover:scale-125 group-hover:text-green-300 
-            group-hover:drop-shadow-[0_0_15px_#22c55e] 
-            animate-pulse"></i>
-        </span>
-        <h2 class="text-3xl font-extrabold bg-clip-text text-transparent 
-          bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 drop-shadow-lg 
-          transition-all duration-500 group-hover:scale-110 group-hover:text-white">
-          Environmental Science
-        </h2>
-      </div>
-
-      <!-- Mathematics -->
-      <div class="p-6 rounded-xl bg-white/5 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center">
-        <span class="floating-icon float-slow inline-block">
-          <i class="fas fa-square-root-alt text-4xl text-yellow-400 mb-3 
-            transition-transform duration-700 
-            group-hover:rotate-180 group-hover:scale-125 group-hover:text-yellow-300 
-            group-hover:drop-shadow-[0_0_15px_#eab308] 
-            animate-pulse"></i>
-        </span>
-        <h2 class="text-3xl font-extrabold bg-clip-text text-transparent 
-          bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 drop-shadow-lg 
-          transition-all duration-500 group-hover:scale-110 group-hover:text-white">
-          Mathematics
-        </h2>
-      </div>
-      
-      <!-- Physics -->
-      <div class="p-6 rounded-xl bg-white/5 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center">
-        <span class="floating-icon float-slow inline-block">
-          <i class="fas fa-atom text-4xl text-purple-400 mb-3 
-            transition-transform duration-700 
-            group-hover:rotate-180 group-hover:scale-125 group-hover:text-purple-300 
-            group-hover:drop-shadow-[0_0_15px_#a855f7] 
-            animate-pulse"></i>
-        </span>
-        <h2 class="text-3xl font-extrabold bg-clip-text text-transparent 
-          bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 drop-shadow-lg 
-          transition-all duration-500 group-hover:scale-110 group-hover:text-white">
-          Physics & Astrophysics
-        </h2>
-      </div>
-
-      <!-- Robotics -->
-      <div class="p-6 rounded-xl bg-white/5 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center">
-        <span class="floating-icon float-slow inline-block">
-          <i class="fas fa-robot text-4xl text-indigo-500 mb-3 
-            transition-transform duration-700 
-            group-hover:rotate-180 group-hover:scale-125 group-hover:text-indigo-300 
-            group-hover:drop-shadow-[0_0_15px_#3b82f6] 
-            animate-pulse"></i>
-        </span>
-        <h2 class="text-3xl font-extrabold bg-clip-text text-transparent 
-          bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 drop-shadow-lg 
-          transition-all duration-500 group-hover:scale-110 group-hover:text-white">
-          Robotics
-        </h2>
-      </div>
-    </div>
-
-    <!-- العمود 4 -->
-    <div class="space-y-6">
-      <!-- Economics -->
-      <div class="p-6 rounded-xl bg-white/5 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center">
-        <span class="floating-icon float-slow inline-block">
-          <i class="fas fa-chart-line text-4xl text-green-500 mb-3 
-            transition-transform duration-700 
-            group-hover:rotate-180 group-hover:scale-125 group-hover:text-green-300 
-            group-hover:drop-shadow-[0_0_15px_#22c55e] 
-            animate-pulse"></i>
-        </span>
-        <h2 class="text-3xl font-extrabold bg-clip-text text-transparent 
-          bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 drop-shadow-lg 
-          transition-all duration-500 group-hover:scale-110 group-hover:text-white">
-          Economics
-        </h2>
-      </div>
-
-      <!-- Philosophy -->
-      <div class="p-6 rounded-xl bg-white/5 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center">
-        <span class="floating-icon float-slow inline-block">
-          <i class="fas fa-lightbulb text-4xl text-yellow-500 mb-3 
-            transition-transform duration-700 
-            group-hover:rotate-180 group-hover:scale-125 group-hover:text-yellow-300 
-            group-hover:drop-shadow-[0_0_15px_#eab308] 
-            animate-pulse"></i>
-        </span>
-        <h2 class="text-3xl font-extrabold bg-clip-text text-transparent 
-          bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 drop-shadow-lg 
-          transition-all duration-500 group-hover:scale-110 group-hover:text-white">
-          Philosophy
-        </h2>
-      </div>
-
-      <!-- Psychology -->
-      <div class="p-6 rounded-xl bg-white/5 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center">
-        <span class="floating-icon float-slow inline-block">
-          <i class="fas fa-user-friends text-4xl text-pink-500 mb-3 
-            transition-transform duration-700 
-            group-hover:rotate-180 group-hover:scale-125 group-hover:text-pink-300 
-            group-hover:drop-shadow-[0_0_15px_#ec4899] 
-            animate-pulse"></i>
-        </span>
-        <h2 class="text-3xl font-extrabold bg-clip-text text-transparent 
-          bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 drop-shadow-lg 
-          transition-all duration-500 group-hover:scale-110 group-hover:text-white">
-          Psychology
-        </h2>
-      </div>
-
-      <!-- Business -->
-      <div class="p-6 rounded-xl bg-white/5 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition duration-500 group cursor-pointer text-center">
-        <span class="floating-icon float-slow inline-block">
-          <i class="fas fa-briefcase text-4xl text-indigo-500 mb-3 
-            transition-transform duration-700 
-            group-hover:rotate-180 group-hover:scale-125 group-hover:text-indigo-300 
-            group-hover:drop-shadow-[0_0_15px_#3b82f6] 
-            animate-pulse"></i>
-        </span>
-        <h2 class="text-3xl font-extrabold bg-clip-text text-transparent 
-          bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 drop-shadow-lg 
-          transition-all duration-500 group-hover:scale-110 group-hover:text-white">
-          Business, Entrepreneurship, and Strategy
-        </h2>
-      </div>
-    </div>
-
+  </section>
   </div>
-</section>
+  <script src="script.js"></script>
 
-<!-- TEAM -->
-<section id="team" class="max-w-7xl mx-auto px-6 py-16">
-  <!-- العنوان -->
-  <h3 class="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 drop-shadow-lg animate-pulse hover:scale-110 transition-transform duration-500">
-    Team
-  </h3>
-
-  <!-- الوصف -->
-  <p class="mt-3 text-lg text-slate-300 italic tracking-wide hover:text-white transition-colors duration-300">
-    Founder — Sharkya STEM Research Club.
-  </p>
-</section>
-
-
-<div class="mt-6 flex justify-center">
-  <div class="relative p-6 rounded-2xl border border-white/10 text-center transition-all duration-500 transform hover:-translate-y-1 hover:scale-105 hover:shadow-[0_0_25px_10px_rgba(0,200,255,0.6)] active:shadow-[0_0_30px_15px_rgba(0,200,255,0.9)] overflow-hidden">
-    
-    <!-- خلفية هادية + تأثير متحرك -->
-    <div class="absolute inset-0 rounded-2xl pointer-events-none z-0">
-      <!-- الخلفية الهادية -->
-      <div class="absolute inset-0 rounded-2xl bg-gradient-to-r from-indigo-500 via-blue-500 to-teal-400 opacity-20 blur-xl"></div>
-      <!-- تأثير السحر الخارجي -->
-      <div class="absolute inset-0 rounded-2xl moving-gradient opacity-30 blur-2xl"></div>
-    </div>
-
-    <!-- اللمعة (تشتغل عند الضغط بس) -->
-    <div class="absolute inset-0 rounded-2xl shadow-[0_0_0_0_rgba(0,0,0,0)] transition duration-500 active:shadow-[0_0_25px_10px_rgba(0,200,255,0.6)] pointer-events-none z-10"></div>
-
-    <!-- صورة -->
-    <div class="relative mx-auto h-40 w-40 rounded-full overflow-hidden border-4 border-blue-400 shadow-[0_0_15px_3px_rgba(0,200,255,0.6)] transition-shadow duration-700 z-20">
-      <img src="Karim.jpg" alt="Karim" class="object-cover w-full h-full"/>
-    </div>
-
-    <!-- اسم -->
-    <h4 class="mt-4 font-semibold text-lg z-20 text-white">Karim Mohamed Nady</h4>
-    <div class="text-sm text-slate-300 z-20">- Global Youth Research Network Founder</div>
-    <div class="text-sm text-slate-300 z-20">- Sharkya STEM Research Club Founder</div>
-    <div class="text-sm text-slate-300 z-20">- Website Founder</div>
-
-    <!-- أجنحة خفيفة -->
-    <div class="absolute -left-10 -top-10 w-16 h-16 rounded-full blur-xl opacity-40 z-0" style="background-color: #1e3a8a;"></div>
-    <div class="absolute -right-10 -top-10 w-16 h-16 rounded-full blur-xl opacity-40 z-0" style="background-color: #0d9488;"></div>
-    <div class="absolute -left-10 -bottom-10 w-16 h-16 rounded-full blur-xl opacity-40 z-0" style="background-color: #1e293b;"></div>
-    <div class="absolute -right-10 -bottom-10 w-16 h-16 rounded-full blur-xl opacity-40 z-0" style="background-color: #0369a1;"></div>
-  </div>
-</div>
-
-<style>
-.moving-gradient {
-  background: linear-gradient(270deg, #2f0975, #070550, #38BDF8, #500505, #2f0975);
-  background-size: 400% 400%;
-  animation: gradientMove 10s ease infinite;
-}
-
-@keyframes gradientMove {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-</style>
-
-
-    <!-- Particles أنعم -->
-    <div class="absolute inset-0 overflow-hidden pointer-events-none">
-      <div class="particle"></div>
-      <div class="particle"></div>
-      <div class="particle"></div>
-    </div>
-
-  </div>
-</div>
-
-<style>
-@keyframes fall {
-  0% { transform: translateY(-10px) scale(1); opacity: 0.8; }
-  100% { transform: translateY(150px) scale(0.5); opacity: 0; }
-}
-
-.particle {
-  position: absolute;
-  width: 5px;
-  height: 5px;
-  background: rgba(255, 255, 255, 0.6);
-  border-radius: 50%;
-  animation: fall 4s linear infinite;
-}
-
-.particle:nth-child(1) { left: 25%; animation-delay: 0s; }
-.particle:nth-child(2) { left: 55%; animation-delay: 1s; }
-.particle:nth-child(3) { left: 75%; animation-delay: 2s; }
-.particle:nth-child(4) { left: 25%; animation-delay: 0.5s; }
-.particle:nth-child(5) { left: 55%; animation-delay: 1.5s; }
-.particle:nth-child(6) { left: 75%; animation-delay: 2.5s; }
-</style>
-
-
-
-
-
-
-<style>
-  /* تأثير الجريان اللوني */
-  .animated-border {
-    position: relative;
-    z-index: 0;
-    border: 2px solid transparent;
-    background: linear-gradient(#000, #000) padding-box,
-                linear-gradient(270deg, #500505, #38BDF8, #500505) border-box;
-    background-size: 200% 200%;
-    animation: borderMove 3s linear infinite;
-    border-radius: 8px;
-  }
-
-  @keyframes borderMove {
-    0% {
-      background-position: 0% 50%, 0% 50%;
-    }
-    100% {
-      background-position: 200% 50%, 200% 50%;
-    }
-  }
-</style>
-
-<!-- JOIN -->
-<section id="join" class="max-w-3xl mx-auto px-6 py-16">
-  <div class="p-8 rounded-2xl card-glass border border-white/6">
-<h3 class="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 drop-shadow-lg animate-pulse hover:scale-110 transition-transform duration-500">
-  Support
-</h3>
-
-<p class="text-slate-300 mt-2 drop-shadow-sm hover:text-white transition-colors duration-300">
-  Tell us about your question. We'll contact you soon
-</p>
-
-
-    
-
-    <style>
-  /* تأثير الكارت الكبير */
-  .card-glass {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(14px);
-    border-radius: 1rem;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.4s ease, box-shadow 0.4s ease;
-  }
-
-  /* تأثير عند المرور بالماوس */
-  .card-glass:hover {
-    transform: translateY(-6px) scale(1.02);
-    box-shadow: 0 0 20px rgba(6, 62, 78, 0.4);
-  }
-
-  /* لمعة متحركة على الحواف */
-  .card-glass::before {
-    content: "";
-    position: absolute;
-    inset: -50%;
-    background: conic-gradient(
-      from 0deg,
-      rgba(6, 62, 78, 0.4),
-      transparent,
-      rgba(6, 62, 78, 0.4),
-      transparent
-    );
-    animation: rotateBorder 6s linear infinite;
-    z-index: 0;
-  }
-
-  /* طبقة شفافة فوق اللمعة عشان ما تغطي المحتوى */
-  .card-glass::after {
-    content: "";
-    position: absolute;
-    inset: 2px;
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: inherit;
-    z-index: 1;
-  }
-
-  /* حركة اللمعة */
-  @keyframes rotateBorder {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-
-  /* تأثير الجريان اللوني */
-  .card-glass {
-    position: relative;
-    z-index: 0;
-    border: 2px solid transparent;
-    background: linear-gradient(#000, #000) padding-box,
-                linear-gradient(270deg, #070550, #2f0975,#070550 ) border-box;
-    background-size: 200% 200%;
-    animation: borderMove 10s linear infinite;
-    border-radius: 8px;
-  }
-
-  @keyframes borderMove {
-    0% {
-      background-position: 0% 50%, 0% 50%;
-    }
-    100% {
-      background-position: 200% 50%, 200% 50%;
-    }
-  }
-  
-  /* المحتوى يظل فوق */
-  .card-glass > * {
-    position: relative;
-    z-index: 2;
-  }
-</style>
-
-
-    <form id="joinForm" class="mt-6 grid grid-cols-1 gap-4">
-      <textarea name="interests"input name="fullname" required placeholder="Full name" class="w-full p-3 bg-transparent animated-border"></textarea>
-      <textarea name="interests"input name="email" type="email" required placeholder="Email address" class="w-full p-3 bg-transparent animated-border"></textarea>
-      <textarea name="interests"input name="country" placeholder="Country" class="w-full p-3 bg-transparent animated-border"></textarea>
-
-      <select name="interests" class="w-full p-3 bg-transparent animated-border">
-        <option value="student" class="text-black">I'm a student</option>
-        <option value="mentor" class="text-black">I'm faculty / mentor</option>
-        <option value="volunteer" class="text-black">I'm an organizer / volunteer</option>
-      </select>
-
-      <textarea name="interests" placeholder="What is your question?" class="w-full p-3 bg-transparent animated-border"></textarea>
-
-      <div class="flex gap-4">
-<button type="submit" 
-  class="px-6 py-3 rounded-md text-white font-semibold btn-3d btn-shine 
-  bg-gradient-to-r from-sky-400 to-crimson-500 hover:from-sky-300 hover:to-crimson-400 transition-all duration-300">
-  Submit
-</button>
-
-<button type="button" onclick="openGoogleForm()" class="join-btn">Join Network</button>
-
-<style>
-/* From Uiverse.io by 212004ALJI — معدل */
-.join-btn,
-.join-btn::after {
-  padding: 10px 50px;
-  font-size: 20px;
-  border: none;
-  border-radius: 5px;
-  color: white;
-  background-color: transparent;
-  position: relative;
-  cursor: pointer;
-}
-
-.join-btn::after {
-  --move1: inset(50% 50% 50% 50%);
-  --move2: inset(31% 0 40% 0);
-  --move3: inset(39% 0 15% 0);
-  --move4: inset(45% 0 40% 0);
-  --move5: inset(45% 0 6% 0);
-  --move6: inset(14% 0 61% 0);
-  clip-path: var(--move1);
-  content: 'JOIN NETWORK';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: block;
-}
-
-.join-btn:hover::after {
-  animation: glitch_4011 1s;
-  animation-timing-function: steps(2, end);
-  text-shadow: -3px -3px 0px #1df2f0, 3px 3px 0px #E94BE8;
-  background-color: transparent;
-  border: 3px solid rgb(0, 255, 213);
-}
-
-.join-btn:hover {
-  text-shadow: -1px -1px 0px #1df2f0, 1px 1px 0px #E94BE8;
-  background-color: transparent;
-  border: 1px solid rgb(0, 255, 213);
-  box-shadow: 0px 10px 10px -10px rgb(0, 255, 213);
-}
-
-@keyframes glitch_4011 {
-  0% { clip-path: var(--move1); transform: translate(0px,-10px); }
-  10% { clip-path: var(--move2); transform: translate(-10px,10px); }
-  20% { clip-path: var(--move3); transform: translate(10px,0px); }
-  30% { clip-path: var(--move4); transform: translate(-10px,10px); }
-  40% { clip-path: var(--move5); transform: translate(10px,-10px); }
-  50% { clip-path: var(--move6); transform: translate(-10px,10px); }
-  60% { clip-path: var(--move1); transform: translate(10px,-10px); }
-  70% { clip-path: var(--move3); transform: translate(-10px,10px); }
-  80% { clip-path: var(--move2); transform: translate(10px,-10px); }
-  90% { clip-path: var(--move4); transform: translate(-10px,10px); }
-  100% { clip-path: var(--move1); transform: translate(0); }
-}
-</style>
-
-<script>
-function openGoogleForm() {
-  window.open("https://docs.google.com/forms/...", "_blank");
-}
-</script>
-
-        
-      </div>
-
-      <p id="formMsg" class="text-sm text-emerald-400 mt-2 hidden">Thank you — we received your question.</p>
-    </form>
-  </div>
-</section>
 
 <!-- EmailJS -->
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
@@ -1460,5 +1044,7 @@ function openGoogleForm() {
     })();
 
   </script>
+
 </body>
+
 </html>
